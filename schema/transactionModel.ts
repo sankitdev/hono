@@ -14,4 +14,7 @@ const transactionSchema = new Schema<ITransaction>({
   userId: { type: Types.ObjectId, ref: "User" },
 });
 
-export const Transaction = model("Transaction", transactionSchema);
+export const Transaction = model<ITransaction>(
+  "Transaction",
+  transactionSchema
+);
