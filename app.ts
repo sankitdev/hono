@@ -8,7 +8,6 @@ app.get("/", (c) => {
 });
 const startServer = async () => {
   await connectDB();
-  console.log("Server is starting...");
 };
 
 startServer();
