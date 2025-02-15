@@ -16,7 +16,7 @@ const sessionSchema = new Schema<ISession>(
     ipAddress: { type: String, required: true },
     userAgent: { type: String, required: true },
   },
-  { timestamps: true }
+  { strict: "throw", timestamps: true }
 );
 
 export const Session = model<ISession>("Session", sessionSchema);
