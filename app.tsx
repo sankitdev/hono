@@ -1,10 +1,15 @@
 import { Hono } from "hono";
-import { connectDB } from "./schema";
 import { logger } from "hono/logger";
+import userRoute from "./routers/user";
+import connectDB from "./db/dbConnect";
+import { Top } from "./views/root";
 const app = new Hono();
 app.use(logger());
+
+app.route("/user", userRoute);
 app.get("/", (c) => {
-  return c.json({ test: "ho rha h", message: "hello" });
+  const messages = ["Good Morning", "Good Evening", "Good Night"];
+  return c.html(<Top messages={messages} />);
 });
 const startServer = async () => {
   await connectDB();
