@@ -45,7 +45,7 @@ const loginUser = asyncHandler(async (c) => {
   if (!user) return c.json({ message: "User not found" }, 404);
   const passCheck = await Bun.password.verify(password, user?.password!);
   if (!passCheck) return c.json({ message: "Not authorized" }, 401);
-  const { sessionId } = await createSession(c, user);
+  const { sessionId } = await createSession(c, user.id);
   return c.json({ message: "Session Created", sessionId });
 });
 
