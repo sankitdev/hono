@@ -3,7 +3,6 @@ import { UserModel, type IUser } from "../schema/userModel";
 import { asyncHandler } from "../helper/async";
 import { password } from "bun";
 import { createUserSchema, updateUserSchema } from "../validation/user";
-import { createSession } from "../services/session.service";
 const userService = new BaseService<IUser>(UserModel);
 
 const createUser = asyncHandler(async (c) => {
@@ -39,14 +38,4 @@ const deleteUser = asyncHandler(async (c) => {
   return c.json({ success: true });
 });
 
-const loginUser = asyncHandler(async (c) => {
-  const { email, password } = await c.req.json();
-  const user = await userService.findOne({ email });
-  if (!user) return c.json({ message: "User not found" }, 404);
-  const passCheck = await Bun.password.verify(password, user?.password!);
-  if (!passCheck) return c.json({ message: "Not authorized" }, 401);
-  const { sessionId } = await createSession(c, user.id);
-  return c.json({ message: "Session Created", sessionId });
-});
-
-export { createUser, getUser, deleteUser, updateUser, loginUser };
+export { createUser, getUser, deleteUser, updateUser };

@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { loginUser } from "../controller/user";
+import { loginUser } from "../controller/authUser";
 
 const authRoute = new Hono();
 
