@@ -39,3 +39,24 @@ export const createSession = async (c: Context, userId: IUser) => {
   );
   return { sessionId };
 };
+
+export const removeSession = async (c: Context, userId: IUser) => {
+  const sessionId = c.req.header("Cookie")?.split("=")[1];
+  if (!sessionId) return c.json({ message: "No active session" }, 401);
+  // get IP Address, User Agent
+  const ipAddress = getClientIP(c);
+  const userAgent = c.req.header("User-Agent") || "Unknown";
+  // match this and delete
+  const deleteSession = SessionModel.findOneAndDelete({
+    sessionId,
+    userId,
+    ipAddress,
+    userAgent,
+  });
+  if (!deleteSession) return c.json({ message: "Session not found" }, 404);
+  c.header(
+    "Set-Cookie",
+    "sesionId=; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=0"
+  );
+  return c.json({ message: "Logged out successfully" });
+};
