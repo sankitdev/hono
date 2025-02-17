@@ -3,8 +3,20 @@ import { SessionModel } from "../schema/sessionModel";
 import { Context } from "hono";
 import { IUser } from "../schema/userModel";
 import { UAParser } from "ua-parser-js";
+
+const getClientIP = (c: any): string => {
+  return (
+    c.req.header("X-Forwarded-For")?.split(",")[0] || // Real IP if behind a proxy
+    c.req.header("CF-Connecting-IP") || // Cloudflare (if used)
+    c.req.header("X-Real-IP") || // Some proxies set this
+    getConnInfo(c)?.remote?.address || // Default method
+    "Unknown"
+  );
+};
+
 export const createSession = async (c: Context, userId: IUser) => {
   const userAgentString = c.req.header("User-Agent") || "Unknown";
+  const ipAddress = getClientIP(c);
   const parser = new UAParser(userAgentString);
   const deviceInfo = {
     browser: parser.getBrowser().name || "Unknown",
@@ -17,7 +29,7 @@ export const createSession = async (c: Context, userId: IUser) => {
     sessionId,
     userId,
     expiresAt: new Date(Date.now() + 60 * 60 * 1000),
-    ipAddress: getConnInfo(c).remote.address,
+    ipAddress,
     userAgent: userAgentString,
     deviceInfo,
   });
