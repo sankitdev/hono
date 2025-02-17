@@ -1,7 +1,7 @@
 {
   "name": "test",
   "scripts": {
-    "dev": "bun run --hot app.ts"
+    "dev": "bun run --hot app.tsx"
   },
   "dependencies": {
     "hono": "^4.7.1",
