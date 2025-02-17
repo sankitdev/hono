@@ -11,13 +11,15 @@ export class BaseService<T extends Document> {
   async findOne(filter: FilterQuery<T>) {
     return this.model.findOne(filter).exec();
   }
-  async create(docs: Array<T> = []) {
+  async create(docs: T) {
     return this.model.create(docs);
   }
   async update(filter: FilterQuery<T>, update: UpdateQuery<T>) {
-    return this.model.findOneAndUpdate(filter, update, { new: true }).exec();
+    return this.model
+      .findOneAndUpdate({ filter }, update, { new: true })
+      .exec();
   }
   async delete(filter: FilterQuery<T>) {
-    return this.model.findOneAndDelete(filter).exec();
+    return this.model.findOneAndDelete({ filter });
   }
 }
