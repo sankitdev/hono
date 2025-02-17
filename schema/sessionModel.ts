@@ -6,6 +6,11 @@ interface ISession extends Document {
   expiresAt: Date;
   ipAddress: string;
   userAgent: string;
+  deviceInfo: {
+    browser: string;
+    os: string;
+    device: string;
+  };
 }
 
 const sessionSchema = new Schema<ISession>(
@@ -15,6 +20,11 @@ const sessionSchema = new Schema<ISession>(
     expiresAt: { type: Date, required: true, index: { expires: "1m" } },
     ipAddress: { type: String, required: true },
     userAgent: { type: String, required: true },
+    deviceInfo: {
+      browser: String,
+      os: String,
+      device: String,
+    },
   },
   { strict: "throw", timestamps: true }
 );

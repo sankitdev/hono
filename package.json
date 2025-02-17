@@ -6,6 +6,7 @@
   "dependencies": {
     "hono": "^4.7.1",
     "mongoose": "^8.10.0",
+    "ua-parser-js": "^2.0.2",
     "winston": "^3.17.0",
     "zod": "^3.24.2"
   },
