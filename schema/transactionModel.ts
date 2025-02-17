@@ -21,7 +21,6 @@ const transactionSchema = new Schema<ITransaction>(
   { strict: "throw", timestamps: true }
 );
 
-export const Transaction = model<ITransaction>(
-  "Transaction",
-  transactionSchema
-);
+const TransactionModel = model<ITransaction>("Transaction", transactionSchema);
+
+export { TransactionModel, ITransaction };
