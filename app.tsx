@@ -1,13 +1,11 @@
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import userRoute from "./routers/user";
 import connectDB from "./db/dbConnect";
 import { Top } from "./views/root";
-import authRoute from "./routers/authRoute";
+import router from "./routers";
 const app = new Hono();
 app.use(logger());
-app.route("/user", userRoute);
-app.route("/auth", authRoute);
+app.route("/", router);
 app.get("/", (c) => {
   const messages = ["Good Morning", "Good Evening", "Good Night"];
   return c.html(<Top messages={messages} />);
