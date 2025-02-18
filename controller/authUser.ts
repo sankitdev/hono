@@ -1,7 +1,7 @@
 import { asyncHandler } from "../helper/async";
 import { IUser, UserModel } from "../schema/userModel";
 import { BaseService } from "../services/base.service";
-import { createSession } from "../services/session.service";
+import { createSession, removeSession } from "../services/session.service";
 
 const userService = new BaseService<IUser>(UserModel);
 
@@ -15,6 +15,8 @@ const loginUser = asyncHandler(async (c) => {
   return c.json({ message: "Session Created", sessionId });
 });
 
-const logoutUser = asyncHandler(async (c) => {});
+const logoutUser = asyncHandler(async (c) => {
+  return await removeSession(c);
+});
 
-export { loginUser };
+export { loginUser, logoutUser };
