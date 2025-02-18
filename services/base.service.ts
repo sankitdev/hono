@@ -5,13 +5,13 @@ export class BaseService<T extends Document> {
   constructor(model: Model<T>) {
     this.model = model;
   }
-  async findAll(filter: FilterQuery<T> = {}) {
-    return this.model.find(filter).exec();
+  async findAll(filter: FilterQuery<T> = {}, limit = 10, skip = 0) {
+    return this.model.find(filter).limit(limit).skip(skip).exec();
   }
   async findOne(filter: FilterQuery<T>) {
     return this.model.findOne(filter).exec();
   }
-  async create(docs: T) {
+  async create(docs: Partial<T>) {
     return this.model.create(docs);
   }
   async update(filter: FilterQuery<T>, update: UpdateQuery<T>) {

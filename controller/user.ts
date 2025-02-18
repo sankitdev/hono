@@ -16,7 +16,7 @@ const createUser = asyncHandler(async (c) => {
   const newUser = await userService.create({
     ...parsedBody,
     password: hashPass,
-  } as IUser);
+  });
   return c.json({ success: true, data: newUser }, 201);
 });
 
