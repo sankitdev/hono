@@ -4,7 +4,7 @@ interface ITransaction extends Document {
   amount: number;
   type: "credit_card" | "debit_card";
   date: Date;
-  userId: Schema.Types.ObjectId;
+  userId: Types.ObjectId;
 }
 
 const transactionSchema = new Schema<ITransaction>(
@@ -16,7 +16,7 @@ const transactionSchema = new Schema<ITransaction>(
       required: true,
     },
     date: { type: Date, required: true },
-    userId: { type: Types.ObjectId, ref: "User", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { strict: "throw", timestamps: true }
 );
