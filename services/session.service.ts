@@ -35,28 +35,34 @@ export const createSession = async (c: Context, userId: IUser) => {
   });
   c.header(
     "Set-Cookie",
-    `sessiionId=${sessionId}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600`
+    `sessionId=${sessionId}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600`
   );
   return { sessionId };
 };
 
-export const removeSession = async (c: Context, userId: IUser) => {
+export const removeSession = async (c: Context) => {
   const sessionId = c.req.header("Cookie")?.split("=")[1];
   if (!sessionId) return c.json({ message: "No active session" }, 401);
   // get IP Address, User Agent
   const ipAddress = getClientIP(c);
   const userAgent = c.req.header("User-Agent") || "Unknown";
   // match this and delete
-  const deleteSession = SessionModel.findOneAndDelete({
+  const deleteSession = await SessionModel.findOneAndDelete({
     sessionId,
-    userId,
     ipAddress,
-    userAgent,
+    // userAgent, : for now commenting because of issues
   });
-  if (!deleteSession) return c.json({ message: "Session not found" }, 404);
+  if (!deleteSession)
+    return c.json(
+      {
+        message: "Session not found",
+        data: { ipAddress, userAgent, sessionId },
+      },
+      404
+    );
   c.header(
     "Set-Cookie",
-    "sesionId=; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=0"
+    "sessionId=; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=0"
   );
   return c.json({ message: "Logged out successfully" });
 };
