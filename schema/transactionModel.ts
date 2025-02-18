@@ -1,9 +1,9 @@
-import { Schema, Types, model } from "mongoose";
+import { Document, Model, Schema, Types, model } from "mongoose";
 
-interface ITransaction {
+interface ITransaction extends Document {
   amount: number;
   type: "credit_card" | "debit_card";
-  date: string;
+  date: Date;
   userId: Schema.Types.ObjectId;
 }
 
@@ -15,12 +15,15 @@ const transactionSchema = new Schema<ITransaction>(
       enum: ["credit_card", "debit_card"],
       required: true,
     },
-    date: { type: String, required: true },
+    date: { type: Date, required: true },
     userId: { type: Types.ObjectId, ref: "User", required: true },
   },
   { strict: "throw", timestamps: true }
 );
 
-const TransactionModel = model<ITransaction>("Transaction", transactionSchema);
+const TransactionModel: Model<ITransaction> = model<ITransaction>(
+  "Transaction",
+  transactionSchema
+);
 
 export { TransactionModel, ITransaction };
