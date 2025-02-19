@@ -6,18 +6,16 @@ export class BaseService<T extends Document> {
     this.model = model;
   }
   async findAll(filter: FilterQuery<T> = {}, limit = 10, skip = 0) {
-    return this.model.find(filter).limit(limit).skip(skip).exec();
+    return this.model.find(filter).limit(limit).skip(skip).lean();
   }
   async findOne(filter: FilterQuery<T>) {
-    return this.model.findOne(filter).exec();
+    return this.model.findOne(filter).lean();
   }
   async create(docs: Partial<T>) {
     return this.model.create(docs);
   }
   async update(filter: FilterQuery<T>, update: UpdateQuery<T>) {
-    return this.model
-      .findOneAndUpdate({ filter }, update, { new: true })
-      .exec();
+    return this.model.findOneAndUpdate({ filter }, update, { new: true });
   }
   async delete(filter: FilterQuery<T>) {
     return this.model.findOneAndDelete({ filter });
