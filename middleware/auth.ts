@@ -7,7 +7,6 @@ const authorizedUser = async (c: Context, next: Next) => {
     const sessionId = c.req.header("Cookie")?.split("=")[1];
     if (!sessionId) return c.json({ message: "Please Login" }, 401);
     const session = await sessionService.findOne({ sessionId });
-    console.log(session);
     if (!session) return c.json({ message: "No active session" }, 401);
     const userId = session.userId.toString();
     c.set("userId", userId); // attaching to context
