@@ -19,12 +19,10 @@ const createUser = asyncHandler(async (c) => {
   });
   return c.json({ success: true, data: newUser }, 201);
 });
-
 const getUser = asyncHandler(async (c) => {
   const users = await userService.findAll();
   return c.json({ success: true, data: users });
 });
-
 const updateUser = asyncHandler(async (c) => {
   const id = c.req.param;
   const body = await c.req.json();

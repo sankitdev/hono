@@ -22,7 +22,6 @@ const createTransaction = asyncHandler(async (c) => {
   const trans = await transactionService.create(parsed);
   return c.json({ trans });
 });
-
 const updateTransaction = asyncHandler(async (c) => {
   const userId = c.get("userId");
   const body = await c.req.json();
