@@ -11,7 +11,8 @@ import {
 
 const transactionService = new BaseService<ITransaction>(TransactionModel);
 const getTransaction = asyncHandler(async (c) => {
-  const trans = await transactionService.findAll({});
+  const userId = c.get("userId");
+  const trans = await transactionService.findAll({ userId });
   if (trans.length === 0) return c.json([]);
   return c.json({ transaction: trans });
 });
@@ -23,15 +24,15 @@ const createTransaction = asyncHandler(async (c) => {
 });
 
 const updateTransaction = asyncHandler(async (c) => {
-  const id = c.req.param;
+  const userId = c.get("userId");
   const body = await c.req.json();
   const parsed = updateTransactionSchema.parse(body);
-  const updateTrans = await transactionService.update(id, parsed);
+  const updateTrans = await transactionService.update(userId, parsed);
   return c.json({ message: "Updated", updateTrans });
 });
 const deleteTransaction = asyncHandler(async (c) => {
-  const id = c.req.param;
-  await transactionService.delete(id);
+  const userId = c.get("userId");
+  await transactionService.delete(userId);
   return c.json({ success: true });
 });
 export {
