@@ -1,6 +1,7 @@
 import { Document, Model, Schema, Types, model } from "mongoose";
 
 interface ITransaction extends Document {
+  _id: Schema.Types.ObjectId;
   amount: number;
   type: "credit_card" | "debit_card";
   date: Date;
@@ -15,7 +16,6 @@ const transactionSchema = new Schema<ITransaction>(
       enum: ["credit_card", "debit_card"],
       required: true,
     },
-    date: { type: Date, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { strict: "throw", timestamps: true }
