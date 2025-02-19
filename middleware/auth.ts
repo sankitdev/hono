@@ -12,7 +12,7 @@ const authorizedUser = async (c: Context, next: Next) => {
     c.set("userId", userId); // attaching to context
     await next();
   } catch (error) {
-    c.json({ message: error }, 500);
+    return c.json({ success: false, message: (error as Error).message }, 500);
   }
 };
 
