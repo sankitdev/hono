@@ -23,7 +23,6 @@ export const createSession = async (c: Context, userId: IUser) => {
     os: parser.getOS().name || "Unkown",
     device: parser.getDevice().model || "Unknown",
   };
-  await SessionModel.deleteMany({ userId });
   const sessionId = crypto.randomUUID();
   await SessionModel.create({
     sessionId,
