@@ -1,6 +1,6 @@
 import { asyncHandler } from "../helper/async";
-import { SessionModel } from "../schema/sessionModel";
-import { IUser, UserModel } from "../schema/userModel";
+import { SessionModel } from "../schema/session.model";
+import { IUser, UserModel } from "../schema/user.model";
 import { BaseService } from "../services/base.service";
 import { createSession, removeSession } from "../services/session.service";
 

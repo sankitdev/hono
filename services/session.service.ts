@@ -1,7 +1,7 @@
 import { getConnInfo } from "hono/bun";
-import { SessionModel } from "../schema/sessionModel";
+import { SessionModel } from "../schema/session.model";
 import { Context } from "hono";
-import { IUser } from "../schema/userModel";
+import { IUser } from "../schema/user.model";
 import { UAParser } from "ua-parser-js";
 
 const getClientIP = (c: any): string => {

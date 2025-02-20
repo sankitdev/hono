@@ -1,5 +1,5 @@
 import { BaseService } from "../services/base.service";
-import { UserModel, type IUser } from "../schema/userModel";
+import { UserModel, type IUser } from "../schema/user.model";
 import { asyncHandler } from "../helper/async";
 import { password } from "bun";
 import { createUserSchema, updateUserSchema } from "../validation/user";

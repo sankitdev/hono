@@ -2,7 +2,7 @@ import { asyncHandler } from "../helper/async";
 import {
   type ITransaction,
   TransactionModel,
-} from "../schema/transactionModel";
+} from "../schema/transaction.model";
 import { BaseService } from "../services/base.service";
 import {
   createTransactionSchema,

@@ -1,5 +1,5 @@
 import { Context, Next } from "hono";
-import { ISession, SessionModel } from "../schema/sessionModel";
+import { ISession, SessionModel } from "../schema/session.model";
 import { BaseService } from "../services/base.service";
 const sessionService = new BaseService<ISession>(SessionModel);
 const authorizedUser = async (c: Context, next: Next) => {
