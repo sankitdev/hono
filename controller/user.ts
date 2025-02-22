@@ -3,20 +3,27 @@ import { UserModel, type IUser } from "../schema/user.model";
 import { asyncHandler } from "../helper/async";
 import { password } from "bun";
 import { createUserSchema, updateUserSchema } from "../validation/user";
+import {
+  generateVerificationToken,
+  sendEmail,
+} from "../services/email.service";
 const userService = new BaseService<IUser>(UserModel);
 
 const createUser = asyncHandler(async (c) => {
   const body = await c.req.json();
-  const parsedBody = createUserSchema.parse(body);
-  const hashPass = await password.hash(parsedBody.password, {
+  // const parsedBody = createUserSchema.parse(body);
+  const hashPass = await password.hash(body.password, {
     algorithm: "argon2d",
     memoryCost: 4,
     timeCost: 5,
   });
   const newUser = await userService.create({
-    ...parsedBody,
+    ...body,
     password: hashPass,
   });
+  const { verificationCode, verificationLink } =
+    await generateVerificationToken(newUser._id);
+  sendEmail(c, newUser.email, verificationCode, verificationLink);
   return c.json({ success: true, data: newUser }, 201);
 });
 const getUser = asyncHandler(async (c) => {
