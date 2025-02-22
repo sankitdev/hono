@@ -3,10 +3,18 @@ const nameRegex = /^[A-Za-z]+$/;
 const passwordRegex =
   /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const createUserSchema = z.object({
-  name: z
+  firstName: z
     .string()
-    .min(3, "Name must be at least 3 char")
-    .regex(nameRegex, "Name must contain only alphabets"),
+    .min(3, "FirstName must be at least 3 char")
+    .regex(nameRegex, "FirstName must contain only alphabets"),
+  lastName: z
+    .string()
+    .min(3, "LastName must be at least 3 char")
+    .regex(nameRegex, "LastName must contain only alphabets"),
+  userName: z
+    .string()
+    .min(3, "UserName must container at least 3 char")
+    .toLowerCase(),
   email: z.string().email("Invalid email format"),
   password: z
     .string()
