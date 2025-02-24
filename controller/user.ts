@@ -23,6 +23,8 @@ const createUser = asyncHandler(async (c) => {
   });
   const { verificationCode, verificationLink } =
     await generateVerificationToken(newUser._id);
+  newUser.verificationCode = verificationCode;
+  newUser.verificationExpires = new Date(Date.now() + 5 * 60 * 1000);
   sendEmail(c, newUser.email, verificationCode, verificationLink);
   return c.json({ success: true, data: newUser }, 201);
 });
