@@ -28,16 +28,16 @@ const sendEmail = async (
   }
 };
 
-const generateVerificationToken = async (userId: Types.ObjectId) => {
+const generateVerificationToken = async () => {
   try {
+    const verificationToken = crypto.randomBytes(32).toString("hex");
     const tokenCode = crypto.randomBytes(3).toString("hex");
     const verificationCode = parseInt(tokenCode, 16)
       .toString()
       .slice(0, 6)
       .padStart(6, "0");
-    console.log(verificationCode);
-    const verificationLink = `https://localhost:3000/verify?token=${userId}`;
-    return { verificationCode, verificationLink };
+    const verificationLink = `http://localhost:3000/auth/verify?token=${verificationToken}`;
+    return { verificationCode, verificationLink, verificationToken };
   } catch (err) {
     console.error("crypto support is disabled!");
     throw new Error("Failed to generate verification token");
