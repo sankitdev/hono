@@ -22,5 +22,10 @@ const loginUser = asyncHandler(async (c) => {
 const logoutUser = asyncHandler(async (c) => {
   return await removeSession(c);
 });
+const verifyLoginUser = asyncHandler(async (c) => {
+  const token = c.req.query("token");
+  if (!token) return c.json({ message: "No Token found" });
 
-export { loginUser, logoutUser };
+  return c.json({ success: true, token });
+});
+export { loginUser, logoutUser, verifyLoginUser };
