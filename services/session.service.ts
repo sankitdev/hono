@@ -46,7 +46,7 @@ export const createSession = async (c: Context, userId: IUser) => {
   return { sessionId };
 };
 
-export const removeSession = asyncHandler(async (c: Context) => {
+export const removeSession = async (c: Context) => {
   const sessionId = c.req.header("Cookie")?.split("=")[1];
   if (!sessionId) return c.json({ message: "No active session" }, 401);
   // get IP Address, User Agent
@@ -71,4 +71,4 @@ export const removeSession = asyncHandler(async (c: Context) => {
     "sessionId=; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=0"
   );
   return c.json({ message: "Logged out successfully" });
-});
+};
