@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import Logger from "../utils/winstonLogger";
 import { Context } from "hono";
 import { Types } from "mongoose";
+import * as crypto from "node:crypto";
 const resend = new Resend(process.env.RESEND_API);
 
 const sendEmail = async (
@@ -28,9 +29,7 @@ const sendEmail = async (
 };
 
 const generateVerificationToken = async (userId: Types.ObjectId) => {
-  let crypto;
   try {
-    crypto = await import("node:crypto");
     const tokenCode = crypto.randomBytes(3).toString("hex");
     const verificationCode = parseInt(tokenCode, 16)
       .toString()

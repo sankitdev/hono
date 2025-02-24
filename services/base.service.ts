@@ -9,7 +9,7 @@ export class BaseService<T extends Document> {
     return this.model.find(filter).limit(limit).skip(skip).lean();
   }
   async findOne(filter: FilterQuery<T>) {
-    return this.model.findOne(filter).lean();
+    return this.model.findOne(filter);
   }
   async create(docs: Partial<T>) {
     return this.model.create(docs);
