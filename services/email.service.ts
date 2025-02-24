@@ -1,7 +1,6 @@
 import { Resend } from "resend";
 import Logger from "../utils/winstonLogger";
 import { Context } from "hono";
-import { Types } from "mongoose";
 import * as crypto from "node:crypto";
 const resend = new Resend(process.env.RESEND_API);
 

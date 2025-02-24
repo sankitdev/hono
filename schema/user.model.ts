@@ -59,7 +59,11 @@ const userSchema = new Schema<IUser>(
     isVerified: { type: Boolean, default: false },
     verificationToken: { type: String, select: false }, //Used in sending link
     verificationCode: { type: String, select: false }, //Used in sending email Code
-    verificationExpires: { type: Date, select: false },
+    verificationExpires: {
+      type: Date,
+      select: false,
+      index: { expires: "1m" },
+    },
 
     // 🗑️ Soft Deletion
     deletedAt: { type: Date, default: null },
