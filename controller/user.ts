@@ -18,13 +18,15 @@ const createUser = asyncHandler(async (c) => {
     timeCost: 5,
   });
   const newUser = await userService.create({
-    ...body,
+    ...parsedBody,
     password: hashPass,
   });
-  const { verificationCode, verificationLink } =
-    await generateVerificationToken(newUser._id);
+  const { verificationCode, verificationLink, verificationToken } =
+    await generateVerificationToken();
   newUser.verificationCode = verificationCode;
+  newUser.verificationToken = verificationToken;
   newUser.verificationExpires = new Date(Date.now() + 5 * 60 * 1000);
+  newUser.save();
   sendEmail(c, newUser.email, verificationCode, verificationLink);
   return c.json({ success: true, data: newUser }, 201);
 });

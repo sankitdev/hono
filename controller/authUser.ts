@@ -25,7 +25,7 @@ const logoutUser = asyncHandler(async (c) => {
 const verifyLoginUserWithLink = asyncHandler(async (c) => {
   const token = c.req.query("token");
   if (!token) return c.json({ message: "No Token found" });
-  const user = await userService.findOne({ _id: token });
+  const user = await userService.findOne({ verificationToken: token });
   if (!user) return c.json({ message: "Token Expired" });
   if (user.isVerified)
     return c.json({
