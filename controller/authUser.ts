@@ -22,10 +22,38 @@ const loginUser = asyncHandler(async (c) => {
 const logoutUser = asyncHandler(async (c) => {
   return await removeSession(c);
 });
-const verifyLoginUser = asyncHandler(async (c) => {
+const verifyLoginUserWithLink = asyncHandler(async (c) => {
   const token = c.req.query("token");
   if (!token) return c.json({ message: "No Token found" });
-
-  return c.json({ success: true, token });
+  const user = await userService.findOne({ _id: token });
+  if (!user) return c.json({ message: "Token Expired" });
+  if (user.isVerified)
+    return c.json({
+      message: `Congrats you ${user.firstName} are already verified`,
+    });
+  user.isVerified = true;
+  await user.save();
+  return c.json({ success: true, user });
 });
-export { loginUser, logoutUser, verifyLoginUser };
+
+const verifyLoginUserWithOTP = asyncHandler(async (c) => {
+  const userId = c.req.query("userId");
+  const emailOtp = await c.req.json();
+  const user = await userService.findOne({ _id: userId });
+  if (!user) return c.json({ message: "Something wrong" });
+  if (user.verificationCode === emailOtp) {
+    user.isVerified = true; // Set the verification status
+    await user.save();
+    return c.json({
+      message: `Congrate ${user.firstName} you are now verified. You can login Now`,
+    });
+  } else {
+    return c.json({ message: "Wrong Code Entered." });
+  }
+});
+export {
+  loginUser,
+  logoutUser,
+  verifyLoginUserWithLink,
+  verifyLoginUserWithOTP,
+};
