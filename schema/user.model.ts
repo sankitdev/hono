@@ -57,8 +57,8 @@ const userSchema = new Schema<IUser>(
     },
     suspendedUntil: { type: Date, default: null },
     isVerified: { type: Boolean, default: false },
-    verificationToken: { type: String, select: false },
-    verificationCode: { type: String, select: false },
+    verificationToken: { type: String, select: false }, //Used in sending link
+    verificationCode: { type: String, select: false }, //Used in sending email Code
     verificationExpires: { type: Date, select: false },
 
     // 🗑️ Soft Deletion
