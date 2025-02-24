@@ -11,8 +11,8 @@ const userService = new BaseService<IUser>(UserModel);
 
 const createUser = asyncHandler(async (c) => {
   const body = await c.req.json();
-  // const parsedBody = createUserSchema.parse(body);
-  const hashPass = await password.hash(body.password, {
+  const parsedBody = createUserSchema.parse(body);
+  const hashPass = await password.hash(parsedBody.password, {
     algorithm: "argon2d",
     memoryCost: 4,
     timeCost: 5,
