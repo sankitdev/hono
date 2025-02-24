@@ -3,6 +3,8 @@ import { SessionModel } from "../schema/session.model";
 import { Context } from "hono";
 import { IUser } from "../schema/user.model";
 import { UAParser } from "ua-parser-js";
+import Logger from "../utils/winstonLogger";
+import { asyncHandler } from "../helper/async";
 
 const getClientIP = (c: any): string => {
   return (
@@ -24,14 +26,19 @@ export const createSession = async (c: Context, userId: IUser) => {
     device: parser.getDevice().model || "Unknown",
   };
   const sessionId = crypto.randomUUID();
-  await SessionModel.create({
-    sessionId,
-    userId,
-    expiresAt: new Date(Date.now() + 60 * 60 * 1000),
-    ipAddress,
-    userAgent: userAgentString,
-    deviceInfo,
-  });
+  try {
+    await SessionModel.create({
+      sessionId,
+      userId,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      ipAddress,
+      userAgent: userAgentString,
+      deviceInfo,
+    });
+  } catch (error) {
+    Logger.error("Error creating session:", error);
+    throw new Error("Session creation failed");
+  }
   c.header(
     "Set-Cookie",
     `sessionId=${sessionId}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600`
@@ -39,7 +46,7 @@ export const createSession = async (c: Context, userId: IUser) => {
   return { sessionId };
 };
 
-export const removeSession = async (c: Context) => {
+export const removeSession = asyncHandler(async (c: Context) => {
   const sessionId = c.req.header("Cookie")?.split("=")[1];
   if (!sessionId) return c.json({ message: "No active session" }, 401);
   // get IP Address, User Agent
@@ -64,4 +71,4 @@ export const removeSession = async (c: Context) => {
     "sessionId=; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=0"
   );
   return c.json({ message: "Logged out successfully" });
-};
+});
