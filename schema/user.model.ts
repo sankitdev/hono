@@ -34,7 +34,7 @@ const userSchema = new Schema<IUser>(
     avatar: String,
 
     // 🔒 Security & Authentication
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     twoFactor: {
       enabled: { type: Boolean, default: false },
       secret: { type: String, select: false },
