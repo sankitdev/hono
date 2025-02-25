@@ -4,9 +4,8 @@ import { Context } from "hono";
 import { IUser } from "../schema/user.model";
 import { UAParser } from "ua-parser-js";
 import Logger from "../utils/winstonLogger";
-import { asyncHandler } from "../helper/async";
 
-const getClientIP = (c: any): string => {
+const getClientIP = (c: Context): string => {
   return (
     c.req.header("X-Forwarded-For")?.split(",")[0] || // Real IP if behind a proxy
     c.req.header("CF-Connecting-IP") || // Cloudflare (if used)
