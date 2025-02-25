@@ -26,9 +26,20 @@ const createUser = asyncHandler(async (c) => {
   newUser.verificationCode = verificationCode;
   newUser.verificationToken = verificationToken;
   newUser.verificationExpires = new Date(Date.now() + 5 * 60 * 1000);
-  newUser.save();
+  await newUser.save();
   sendEmail(c, newUser.email, verificationCode, verificationLink);
-  return c.json({ success: true, data: newUser }, 201);
+  return c.json(
+    {
+      success: true,
+      data: {
+        id: newUser._id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+      },
+    },
+    201
+  );
 });
 const getUser = asyncHandler(async (c) => {
   const users = await userService.findAll();
