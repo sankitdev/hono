@@ -2,8 +2,14 @@ import { Resend } from "resend";
 import Logger from "../utils/winstonLogger";
 import { Context } from "hono";
 import * as crypto from "node:crypto";
-const resend = new Resend(process.env.RESEND_API);
-
+import * as nodemailer from "nodemailer";
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "sankitdev.official@gmail.com",
+    pass: "zyzj uehv nezr nlxj", // Use App Password if 2FA is enabled
+  },
+});
 const sendEmail = async (
   c: Context,
   to: string,
@@ -11,8 +17,8 @@ const sendEmail = async (
   tokenLink: string
 ) => {
   try {
-    const response = await resend.emails.send({
-      from: "onboarding@resend.dev",
+    const response = await transporter.sendMail({
+      from: "sankitdev.official@gmail.com",
       to,
       subject: "Verify your email",
       html: `<div>
