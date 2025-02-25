@@ -32,17 +32,23 @@ const verifyLoginUserWithLink = asyncHandler(async (c) => {
       message: `Congrats you ${user.firstName} are already verified`,
     });
   user.isVerified = true;
+  user.verificationExpires = null;
   await user.save();
-  return c.json({ success: true, user });
+  return c.json({
+    success: true,
+    message: `Congrats ${user.userName} now you can login`,
+  });
 });
 
 const verifyLoginUserWithOTP = asyncHandler(async (c) => {
-  const userId = c.req.query("userId");
-  const emailOtp = await c.req.json();
+  const userId = c.req.param("userId");
+  const { emailOtp } = await c.req.json();
   const user = await userService.findOne({ _id: userId });
-  if (!user) return c.json({ message: "Something wrong" });
+  if (!user) return c.json({ message: "Something wrong" }, 403);
+  console.log(user);
   if (user.verificationCode === emailOtp) {
     user.isVerified = true; // Set the verification status
+    user.verificationExpires = null;
     await user.save();
     return c.json({
       message: `Congrate ${user.firstName} you are now verified. You can login Now`,
