@@ -3,15 +3,21 @@ import { SessionModel } from "../schema/session.model";
 import { IUser, UserModel } from "../schema/user.model";
 import { BaseService } from "../services/base.service";
 import { createSession, removeSession } from "../services/session.service";
+import { HTTP_STATUS } from "../utils/response/responseCodes";
+import { RESPONSE_MESSAGES } from "../utils/response/responseMessages";
 
 const userService = new BaseService<IUser>(UserModel);
 
 const loginUser = asyncHandler(async (c) => {
   const { email, password } = await c.req.json();
   const user = await userService.findOne({ email });
-  if (!user) return c.json({ message: "User not found" }, 404);
+  if (!user)
+    return c.json(
+      { message: RESPONSE_MESSAGES.USER.NOT_FOUND },
+      HTTP_STATUS.NOT_FOUND
+    );
   const passCheck = await Bun.password.verify(password, user.password);
-  if (!passCheck) return c.json({ message: "Not authorized" }, 401);
+  if (!passCheck) return c.json({ message: "Not authorized" }, HTTP_STATUS);
   const sessionCount = await SessionModel.countDocuments({ userId: user._id });
   if (sessionCount >= 3)
     return c.json({ message: "Please Logout from older devices" }, 403);
