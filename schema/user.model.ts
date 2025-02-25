@@ -20,7 +20,7 @@ interface IUser extends Document {
   isVerified: boolean;
   verificationToken?: string;
   verificationCode?: string;
-  verificationExpires?: Date;
+  verificationExpires?: Date | null;
   deletedAt: Date;
 }
 
