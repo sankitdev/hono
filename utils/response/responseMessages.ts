@@ -1,19 +1,19 @@
-type ResponseMessages = {
-  AUTH: Record<string, string>;
-  USER: Record<string, string>;
-  ACCOUNT: Record<string, string>;
-  TRANSACTION: Record<string, string>;
-  ERROR: Record<string, string>;
-};
-
-export const RESPONSE_MESSAGES: ResponseMessages = {
+export const RESPONSE_MESSAGES = {
   // Authentication-related messages
   AUTH: {
+    VERIFIED_SUCCESS:
+      "Your account has been successfully verified. You can now log in",
+    ALREADY_VERIFIED: (userName: string) =>
+      `Your account is already verified, ${userName}. You can proceed to log in.`,
     LOGIN_SUCCESS: "Login successful.",
     LOGIN_FAILED: "Invalid credentials. Please try again.",
     LOGOUT_SUCCESS: "Logout successful.",
-    TOKEN_EXPIRED: "Your session has expired. Please log in again.",
+    NO_TOKEN: "No token found in the request.",
+    TOKEN_EXPIRED: "Token Expired",
+    SESSION_EXPIRED: "Your session has expired. Please log in again.",
     ACCESS_DENIED: "Access denied. Insufficient permissions.",
+    SESSION_REACHED:
+      "Unable to create a new session. Please review your active sessions.",
   },
 
   // User-related messages
