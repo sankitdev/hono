@@ -17,12 +17,22 @@ const loginUser = asyncHandler(async (c) => {
       HTTP_STATUS.NOT_FOUND
     );
   const passCheck = await Bun.password.verify(password, user.password);
-  if (!passCheck) return c.json({ message: "Not authorized" }, HTTP_STATUS);
+  if (!passCheck)
+    return c.json(
+      { message: RESPONSE_MESSAGES.AUTH.LOGIN_FAILED },
+      HTTP_STATUS.UNAUTHORIZED
+    );
   const sessionCount = await SessionModel.countDocuments({ userId: user._id });
   if (sessionCount >= 3)
-    return c.json({ message: "Please Logout from older devices" }, 403);
+    return c.json(
+      { message: RESPONSE_MESSAGES.AUTH.SESSION_REACHED },
+      HTTP_STATUS.FORBIDDEN
+    );
   const { sessionId } = await createSession(c, user.id);
-  return c.json({ message: "Session Created", sessionId });
+  return c.json(
+    { message: RESPONSE_MESSAGES.AUTH.LOGIN_SUCCESS, sessionId },
+    HTTP_STATUS.CREATED
+  );
 });
 
 const logoutUser = asyncHandler(async (c) => {
@@ -30,15 +40,23 @@ const logoutUser = asyncHandler(async (c) => {
 });
 const verifyLoginUserWithLink = asyncHandler(async (c) => {
   const token = c.req.query("token");
-  if (!token) return c.json({ message: "No Token found" }, 404);
+  if (!token)
+    return c.json(
+      { message: RESPONSE_MESSAGES.AUTH.NO_TOKEN },
+      HTTP_STATUS.NOT_FOUND
+    );
   const user = await userService.findOne({ verificationToken: token });
-  if (!user) return c.json({ message: "Token Expired" }, 404);
+  if (!user)
+    return c.json(
+      { message: RESPONSE_MESSAGES.AUTH.TOKEN_EXPIRED },
+      HTTP_STATUS.UNAUTHORIZED
+    );
   if (user.isVerified)
     return c.json(
       {
-        message: `Congrats you ${user.firstName} are already verified`,
+        message: RESPONSE_MESSAGES.AUTH.ALREADY_VERIFIED(user.userName),
       },
-      200
+      HTTP_STATUS.CONFLICT
     );
   user.isVerified = true;
   user.verificationExpires = null;
@@ -46,9 +64,9 @@ const verifyLoginUserWithLink = asyncHandler(async (c) => {
   return c.json(
     {
       success: true,
-      message: `Congrats ${user.userName}. You are verified now you can login`,
+      message: RESPONSE_MESSAGES.AUTH.VERIFIED_SUCCESS,
     },
-    200
+    HTTP_STATUS.CREATED
   );
 });
 
@@ -56,13 +74,17 @@ const verifyLoginUserWithOTP = asyncHandler(async (c) => {
   const userId = c.req.param("userId");
   const { emailOtp } = await c.req.json();
   const user = await userService.findOne({ _id: userId });
-  if (!user) return c.json({ message: "Something wrong" }, 403);
+  if (!user)
+    return c.json(
+      { message: RESPONSE_MESSAGES.USER.NOT_FOUND },
+      HTTP_STATUS.NOT_FOUND
+    );
   if (user.isVerified)
     return c.json(
       {
-        message: `You are already verified`,
+        message: RESPONSE_MESSAGES.AUTH.ALREADY_VERIFIED,
       },
-      400
+      HTTP_STATUS.CONFLICT
     );
   if (user.verificationCode === emailOtp) {
     user.isVerified = true; // Set the verification status
@@ -70,12 +92,16 @@ const verifyLoginUserWithOTP = asyncHandler(async (c) => {
     await user.save();
     return c.json(
       {
-        message: `Congrate ${user.firstName} you are now verified. You can login Now`,
+        success: true,
+        message: RESPONSE_MESSAGES.AUTH.VERIFIED_SUCCESS,
       },
-      200
+      HTTP_STATUS.CREATED
     );
   } else {
-    return c.json({ message: "Wrong Code Entered." }, 500);
+    return c.json(
+      { message: RESPONSE_MESSAGES.ERROR.VALIDATION_FAILED },
+      HTTP_STATUS.BAD_REQUEST
+    );
   }
 });
 export {
