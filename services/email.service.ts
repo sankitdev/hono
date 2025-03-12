@@ -1,4 +1,3 @@
-import { Resend } from "resend";
 import Logger from "../utils/winstonLogger";
 import { Context } from "hono";
 import * as crypto from "node:crypto";
@@ -22,9 +21,9 @@ const sendEmail = async (
       to,
       subject: "Verify your email",
       html: `<div>
-<p>${token}<p>
-<a href=${tokenLink}>Link</a>
-</div>`,
+          <p>${token}<p>
+          <a href=${tokenLink}>Link</a>
+          </div>`,
     });
     return c.json({ response });
   } catch (error) {
