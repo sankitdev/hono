@@ -7,11 +7,23 @@ import {
   generateVerificationToken,
   sendEmail,
 } from "../services/email.service";
+import { HTTP_STATUS } from "../utils/response/responseCodes";
+import { RESPONSE_MESSAGES } from "../utils/response/responseMessages";
+import {HTTPException} from "hono/http-exception"
 const userService = new BaseService<IUser>(UserModel);
 
 const createUser = asyncHandler(async (c) => {
   const body = await c.req.json();
-  const parsedBody = createUserSchema.parse(body);
+  const validationResult = createUserSchema.safeParse(body);
+  if (!validationResult.success){
+    const formattedErrors = validationResult.error.errors.map((error) => ({
+      field: error.path.join("."),
+      message: error.message,
+    }));
+    const errorMessage = formattedErrors.map(err => `${err.message}`).join(", ");
+    throw new HTTPException(HTTP_STATUS.BAD_REQUEST, { message: errorMessage });
+  }
+  const parsedBody = validationResult.data;
   const hashPass = await password.hash(parsedBody.password, {
     algorithm: "argon2d",
     memoryCost: 4,
@@ -30,7 +42,7 @@ const createUser = asyncHandler(async (c) => {
   sendEmail(c, newUser.email, verificationCode, verificationLink);
   return c.json(
     {
-      success: true,
+      message: RESPONSE_MESSAGES.USER.CREATED,
       data: {
         id: newUser._id,
         email: newUser.email,
@@ -38,24 +50,26 @@ const createUser = asyncHandler(async (c) => {
         lastName: newUser.lastName,
       },
     },
-    201
+    HTTP_STATUS.CREATED
   );
 });
 const getUser = asyncHandler(async (c) => {
   const users = await userService.findAll();
-  return c.json({ success: true, data: users });
+  return c.json({ message:"Users", data: users });
 });
 const updateUser = asyncHandler(async (c) => {
   const id = c.req.param;
   const body = await c.req.json();
   const parsedBody = updateUserSchema.parse(body);
   const updatedUser = await userService.update(id, parsedBody);
-  return c.json({ success: true, data: updatedUser });
+  if(!updatedUser) return c.json({ message:RESPONSE_MESSAGES.USER.NOT_FOUND },HTTP_STATUS.NOT_FOUND);
+  return c.json({ message:RESPONSE_MESSAGES.USER.UPDATED, updatedUser },HTTP_STATUS.OK);
 });
 const deleteUser = asyncHandler(async (c) => {
   const id = c.req.param;
-  await userService.delete(id);
-  return c.json({ success: true });
+  const isDeleted = await userService.delete(id);
+  if(!isDeleted) return c.json({ message:RESPONSE_MESSAGES.USER.NOT_FOUND },HTTP_STATUS.NOT_FOUND);
+  return c.json({ message:RESPONSE_MESSAGES.USER.DELETED },HTTP_STATUS.OK);
 });
 
 export { createUser, getUser, deleteUser, updateUser };

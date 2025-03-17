@@ -13,15 +13,14 @@ const createUserSchema = z.object({
     .regex(nameRegex, "LastName must contain only alphabets"),
   userName: z
     .string()
-    .min(3, "UserName must container at least 3 char")
+    .min(3, "UserName must contain at least 3 char")
     .toLowerCase(),
   email: z.string().email("Invalid email format"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 character")
     .regex(
       passwordRegex,
-      "Password must contain at least 1 uppercase letter, 1 number, and 1 special character"
+      "Password must be at least 8 characters and contain at least 1 uppercase letter, 1 number, and 1 special character"
     ),
   avatar: z.string().url().optional(),
 });
