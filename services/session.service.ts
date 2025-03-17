@@ -4,6 +4,8 @@ import { Context } from "hono";
 import { IUser } from "../schema/user.model";
 import { UAParser } from "ua-parser-js";
 import Logger from "../utils/winstonLogger";
+import { RESPONSE_MESSAGES } from "../utils/response/responseMessages";
+import { HTTP_STATUS } from "../utils/response/responseCodes";
 
 const getClientIP = (c: Context): string => {
   return (
@@ -47,7 +49,7 @@ export const createSession = async (c: Context, userId: IUser) => {
 
 export const removeSession = async (c: Context) => {
   const sessionId = c.req.header("Cookie")?.split("=")[1];
-  if (!sessionId) return c.json({ message: "No active session" }, 401);
+  if (!sessionId) return c.json({ message: RESPONSE_MESSAGES.SESSION.NOT_FOUND }, 401);
   // get IP Address, User Agent
   const ipAddress = getClientIP(c);
   const userAgent = c.req.header("User-Agent") || "Unknown";
@@ -60,14 +62,14 @@ export const removeSession = async (c: Context) => {
   if (!deleteSession)
     return c.json(
       {
-        message: "Session not found",
+        message: RESPONSE_MESSAGES.SESSION.NOT_FOUND,
         data: { ipAddress, userAgent, sessionId },
       },
-      404
+      HTTP_STATUS.NOT_FOUND
     );
   c.header(
     "Set-Cookie",
     "sessionId=; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=0"
   );
-  return c.json({ message: "Logged out successfully" });
+  return c.json({ message: RESPONSE_MESSAGES.AUTH.LOGOUT_SUCCESS},HTTP_STATUS.OK);
 };
