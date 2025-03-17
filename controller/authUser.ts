@@ -82,7 +82,7 @@ const verifyLoginUserWithOTP = asyncHandler(async (c) => {
   if (user.isVerified)
     return c.json(
       {
-        message: RESPONSE_MESSAGES.AUTH.ALREADY_VERIFIED,
+        message: RESPONSE_MESSAGES.AUTH.ALREADY_VERIFIED(user.firstName),
       },
       HTTP_STATUS.CONFLICT
     );
@@ -92,7 +92,6 @@ const verifyLoginUserWithOTP = asyncHandler(async (c) => {
     await user.save();
     return c.json(
       {
-        success: true,
         message: RESPONSE_MESSAGES.AUTH.VERIFIED_SUCCESS,
       },
       HTTP_STATUS.CREATED
