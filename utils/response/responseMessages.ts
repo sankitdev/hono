@@ -25,6 +25,27 @@ export const RESPONSE_MESSAGES = {
     EMAIL_ALREADY_EXISTS: "Email is already in use.",
   },
 
+  //Transaction-related messages
+  TRANSACTION: {
+    CREATED: "Transaction created successfully.",
+    UPDATED: "Transaction details updated successfully.",
+    SUCCESS: "Transaction completed successfully.",
+    FAILED: "Transaction failed. Please try again.",
+    PENDING: "Transaction is pending.",
+    CANCELED: "Transaction has been canceled.",
+    LIMIT_EXCEEDED: "Transaction limit exceeded.",
+  },
+
+  // Session-related messages
+  SESSION: {
+    CREATED: "Session Created.",
+    DELETED: "Session deleted successfully.",
+    NOT_FOUND: "Session not found.",
+    SESSION_REACHED: "Unable to create a new session. Please review your active sessions.",
+    SESSION_EXPIRED: "Your session has expired. Please log in again.",
+    SESSION_LOCKED: "Your session is locked. Please contact support.",
+  },
+
   // Account-related messages
   ACCOUNT: {
     CREATED: "Account created successfully.",
@@ -33,15 +54,6 @@ export const RESPONSE_MESSAGES = {
     INSUFFICIENT_FUNDS: "Insufficient funds for this transaction.",
     NOT_FOUND: "Account not found.",
     ACCOUNT_LOCKED: "Your account is locked. Please contact support.",
-  },
-
-  // Transaction-related messages
-  TRANSACTION: {
-    SUCCESS: "Transaction completed successfully.",
-    FAILED: "Transaction failed. Please try again.",
-    PENDING: "Transaction is pending.",
-    CANCELED: "Transaction has been canceled.",
-    LIMIT_EXCEEDED: "Transaction limit exceeded.",
   },
 
   // General error messages
