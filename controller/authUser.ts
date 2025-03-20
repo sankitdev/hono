@@ -86,10 +86,17 @@ const verifyLoginUserWithOTP = asyncHandler(async (c) => {
       },
       HTTP_STATUS.CONFLICT
     );
-  if (user.verificationCode === emailOtp) {
-    user.isVerified = true; // Set the verification status
-    user.verificationExpires = null;
-    await user.save();
+  if (!user.verificationCode || !user.verificationExpires) {
+    return (
+      c.json({ message: RESPONSE_MESSAGES.AUTH.TOKEN_EXPIRED }),
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+  if (user.verificationCode === String(emailOtp)) {
+    await userService.update(user._id, {
+      $unset: { verificationCode: "", verificationExpires: "" },
+      isVerified: true,
+    });
     return c.json(
       {
         message: RESPONSE_MESSAGES.AUTH.VERIFIED_SUCCESS,
