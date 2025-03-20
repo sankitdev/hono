@@ -2,11 +2,13 @@ import Logger from "../utils/winstonLogger";
 import { Context } from "hono";
 import * as crypto from "node:crypto";
 import * as nodemailer from "nodemailer";
+import config from "../config"
+const {EMAIL_ADDRESS, EMAIL_APP_PASSWORD} = config
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "sankitdev.official@gmail.com",
-    pass: "zyzj uehv nezr nlxj", // Use App Password if 2FA is enabled
+    user: EMAIL_ADDRESS, 
+    pass: EMAIL_APP_PASSWORD, 
   },
 });
 const sendEmail = async (
@@ -17,7 +19,7 @@ const sendEmail = async (
 ) => {
   try {
     const response = await transporter.sendMail({
-      from: "sankitdev.official@gmail.com",
+      from: EMAIL_ADDRESS,
       to,
       subject: "Verify your email",
       html: `<div>
