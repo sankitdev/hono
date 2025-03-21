@@ -21,7 +21,7 @@ const registerUser = asyncHandler(async (c) => {
     ...parsedBody,
     password: hashPass,
   });
-  sendVerificationEmail(c, user);
+  sendVerificationEmail(user);
   return c.json(
     {
       message: RESPONSE_MESSAGES.USER.CREATED,
