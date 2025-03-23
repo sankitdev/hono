@@ -3,11 +3,7 @@ import { BaseService } from "../services/base.service";
 import { UserModel, type IUser } from "../schema/user.model";
 import { asyncHandler } from "../helper/async";
 import { createUserSchema, updateUserSchema } from "../validation/user";
-import {
-  generateVerificationToken,
-  sendEmail,
-  sendVerificationEmail,
-} from "../services/email.service";
+import { sendVerificationEmail } from "../services/email.service";
 import { HTTP_STATUS } from "../utils/response/responseCodes";
 import { RESPONSE_MESSAGES } from "../utils/response/responseMessages";
 import { validateRequest } from "../validation/validateRequest";
