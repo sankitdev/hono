@@ -23,9 +23,9 @@ const loginUser = asyncHandler(async (c) => {
       HTTP_STATUS.UNAUTHORIZED
     );
   const sessionCount = await SessionModel.countDocuments({ userId: user._id });
-  if (sessionCount >= 3)
+  if (sessionCount >= 2)
     return c.json(
-      { message: RESPONSE_MESSAGES.AUTH.SESSION_REACHED },
+      { message: RESPONSE_MESSAGES.SESSION.REACHED },
       HTTP_STATUS.FORBIDDEN
     );
   const { sessionId } = await createSession(c, user.id);
@@ -60,6 +60,8 @@ const verifyLoginUserWithLink = asyncHandler(async (c) => {
     );
   user.isVerified = true;
   user.verificationExpires = null;
+  user.verificationToken = "";
+  user.verificationCode = "";
   await user.save();
   return c.json(
     {
@@ -86,16 +88,10 @@ const verifyLoginUserWithOTP = asyncHandler(async (c) => {
       },
       HTTP_STATUS.CONFLICT
     );
-  if (!user.verificationCode || !user.verificationExpires) {
-    return (
-      c.json({ message: RESPONSE_MESSAGES.AUTH.TOKEN_EXPIRED }),
-      HTTP_STATUS.BAD_REQUEST
-    );
-  }
   if (user.verificationCode === String(emailOtp)) {
     await userService.update(user._id, {
-      $unset: { verificationCode: "", verificationExpires: "" },
-      isVerified: true,
+      $unset: { verificationCode: 1, verificationExpires: 1 },
+      $set: { isVerified: true },
     });
     return c.json(
       {

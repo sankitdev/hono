@@ -10,10 +10,7 @@ export const RESPONSE_MESSAGES = {
     LOGOUT_SUCCESS: "Logout successful.",
     NO_TOKEN: "No token found in the request.",
     TOKEN_EXPIRED: "Token Expired",
-    SESSION_EXPIRED: "Your session has expired. Please log in again.",
     ACCESS_DENIED: "Access denied. Insufficient permissions.",
-    SESSION_REACHED:
-      "Unable to create a new session. Please review your active sessions.",
   },
 
   // User-related messages
@@ -41,9 +38,10 @@ export const RESPONSE_MESSAGES = {
     CREATED: "Session Created.",
     DELETED: "Session deleted successfully.",
     NOT_FOUND: "Session not found.",
-    SESSION_REACHED: "Unable to create a new session. Please review your active sessions.",
-    SESSION_EXPIRED: "Your session has expired. Please log in again.",
-    SESSION_LOCKED: "Your session is locked. Please contact support.",
+    REACHED:
+      "Unable to create a new session. Please review your active sessions.",
+    EXPIRED: "Your session has expired. Please log in again.",
+    LOCKED: "Your session is locked. Please contact support.",
   },
 
   // Account-related messages
