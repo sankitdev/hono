@@ -9,7 +9,7 @@ export class BaseService<T extends Document> {
     return this.model.find(filter).limit(limit).skip(skip).lean();
   }
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
-    return this.model.findOne(filter).select("+verificationCode");
+    return this.model.findOne(filter).select("+verificationCode +password");
   }
   async create(docs: Partial<T>): Promise<T> {
     return this.model.create(docs as T);
