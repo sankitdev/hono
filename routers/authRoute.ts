@@ -8,6 +8,6 @@ import {
 const authRoute = new Hono();
 authRoute.post("/login", loginUser);
 authRoute.post("/logout", logoutUser);
-authRoute.get("/verify", verifyLoginUserWithLink);
+authRoute.get("/verify-link", verifyLoginUserWithLink);
 authRoute.post("/email-verify/:userId", verifyLoginUserWithOTP);
 export default authRoute;

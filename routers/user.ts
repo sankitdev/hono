@@ -9,7 +9,7 @@ import {
 const userRoute = new Hono();
 
 userRoute.get("/", getUser);
-userRoute.post("/create", registerUser);
+userRoute.post("/regsiter", registerUser);
 userRoute.patch("/:id", updateUser);
 userRoute.delete("/:id", deleteUser);
 export default userRoute;
