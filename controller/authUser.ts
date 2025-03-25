@@ -3,6 +3,7 @@ import { SessionModel } from "../schema/session.model";
 import { IUser, UserModel } from "../schema/user.model";
 import { BaseService } from "../services/base.service";
 import { createSession, removeSession } from "../services/session.service";
+import { verifyUser } from "../services/user.service";
 import { HTTP_STATUS } from "../utils/response/responseCodes";
 import { RESPONSE_MESSAGES } from "../utils/response/responseMessages";
 
@@ -45,66 +46,13 @@ const verifyLoginUserWithLink = asyncHandler(async (c) => {
       { message: RESPONSE_MESSAGES.AUTH.NO_TOKEN },
       HTTP_STATUS.NOT_FOUND
     );
-  const user = await userService.findOne({ verificationToken: token });
-  if (!user)
-    return c.json(
-      { message: RESPONSE_MESSAGES.AUTH.TOKEN_EXPIRED },
-      HTTP_STATUS.UNAUTHORIZED
-    );
-  if (user.isVerified)
-    return c.json(
-      {
-        message: RESPONSE_MESSAGES.AUTH.ALREADY_VERIFIED(user.userName),
-      },
-      HTTP_STATUS.CONFLICT
-    );
-  user.isVerified = true;
-  user.verificationExpires = null;
-  user.verificationToken = "";
-  user.verificationCode = "";
-  await user.save();
-  return c.json(
-    {
-      success: true,
-      message: RESPONSE_MESSAGES.AUTH.VERIFIED_SUCCESS,
-    },
-    HTTP_STATUS.CREATED
-  );
+  return verifyUser({ verificationToken: token }, token, c);
 });
 
 const verifyLoginUserWithOTP = asyncHandler(async (c) => {
   const userId = c.req.param("userId");
   const { emailOtp } = await c.req.json();
-  const user = await userService.findOne({ _id: userId });
-  if (!user)
-    return c.json(
-      { message: RESPONSE_MESSAGES.USER.NOT_FOUND },
-      HTTP_STATUS.NOT_FOUND
-    );
-  if (user.isVerified)
-    return c.json(
-      {
-        message: RESPONSE_MESSAGES.AUTH.ALREADY_VERIFIED(user.firstName),
-      },
-      HTTP_STATUS.CONFLICT
-    );
-  if (user.verificationCode === String(emailOtp)) {
-    await userService.update(user._id, {
-      $unset: { verificationCode: 1, verificationExpires: 1 },
-      $set: { isVerified: true },
-    });
-    return c.json(
-      {
-        message: RESPONSE_MESSAGES.AUTH.VERIFIED_SUCCESS,
-      },
-      HTTP_STATUS.CREATED
-    );
-  } else {
-    return c.json(
-      { message: RESPONSE_MESSAGES.ERROR.VALIDATION_FAILED },
-      HTTP_STATUS.BAD_REQUEST
-    );
-  }
+  return verifyUser({ _id: userId }, emailOtp, c);
 });
 export {
   loginUser,
