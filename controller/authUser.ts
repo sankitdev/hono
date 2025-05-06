@@ -39,6 +39,7 @@ const loginUser = asyncHandler(async (c) => {
 const logoutUser = asyncHandler(async (c) => {
   return await removeSession(c);
 });
+
 const verifyLoginUserWithLink = asyncHandler(async (c) => {
   const token = c.req.query("token");
   if (!token)
@@ -54,6 +55,7 @@ const verifyLoginUserWithOTP = asyncHandler(async (c) => {
   const { emailOtp } = await c.req.json();
   return verifyUser({ _id: userId }, emailOtp, c);
 });
+
 export {
   loginUser,
   logoutUser,
