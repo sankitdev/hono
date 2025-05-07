@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, afterEach } from "bun:test";
-import { setupTestDB, teardownTestDB, clearDatabase } from "../setup"
+import { setupTestDB, teardownTestDB, clearDatabase } from "../setup";
 import { createTestServer } from "../helpers/createTestServer";
 import request from "supertest";
 
@@ -10,17 +10,16 @@ beforeAll(async () => {
   server = createTestServer();
 });
 
-afterEach(async ()=> {
- await clearDatabase();
-})
+afterEach(async () => {
+  await clearDatabase();
+});
 
 afterAll(async () => {
-  await teardownTestDB()
+  await teardownTestDB();
   server.stop();
 });
 
 describe("Authentication E2E Tests", () => {
-
   it("should register a new user", async () => {
     const res = await request(`http://localhost:${server.port}`)
       .post("/user/register")

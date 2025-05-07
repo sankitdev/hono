@@ -3,9 +3,8 @@ import { z } from "zod";
 
 const objectIdSchema = z
   .string()
-  .refine(val => Types.ObjectId.isValid(val))
-  .transform(val => new Types.ObjectId(val));
-
+  .refine((val) => Types.ObjectId.isValid(val))
+  .transform((val) => new Types.ObjectId(val));
 const createTransactionSchema = z.object({
   amount: z
     .number()

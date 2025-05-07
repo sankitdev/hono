@@ -1,7 +1,7 @@
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 
-let mongod : MongoMemoryServer;
+let mongod: MongoMemoryServer;
 
 export async function setupTestDB() {
   mongod = await MongoMemoryServer.create();
@@ -10,7 +10,7 @@ export async function setupTestDB() {
   // await mongoose.connect(uri)
 
   console.log(`Connected to in-memory MongoDB server at`);
-  
+
   // return uri;
 }
 
@@ -22,13 +22,13 @@ export async function teardownTestDB() {
 }
 
 export async function clearDatabase() {
-  if(mongoose.connection.readyState === 0) {
-    throw new Error("Database not connected. Call setupTestDB first"); 
+  if (mongoose.connection.readyState === 0) {
+    throw new Error("Database not connected. Call setupTestDB first");
   }
 
   const collections = mongoose.connection.collections;
 
-  for (const key in collections){
+  for (const key in collections) {
     const collection = collections[key];
     await collection.deleteMany({});
   }
