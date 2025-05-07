@@ -1,47 +1,37 @@
-import { afterAll, beforeAll } from "bun:test";
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from "mongoose";
-import { MongoMemoryServer } from "mongodb-memory-server";
 
-let mongoServer: MongoMemoryServer;
+let mongod : MongoMemoryServer;
 
-beforeAll(async () => {
-  try {
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.disconnect();
-    }
-      mongoServer = await MongoMemoryServer.create({
-        instance: {
-          port: 0, // Let MongoMemoryServer pick a free port
-          dbName: 'test',
-        },
-      });
-      const uri = mongoServer.getUri();
-      await mongoose.connect(uri, {
-        serverSelectionTimeoutMS: 10000,
-        connectTimeoutMS: 10000,
-        ssl: false,
-        retryWrites: false,
-      });
-      console.log(`Connected to MongoMemoryServer at ${uri}`);
-  } catch (error) {
-    console.error('Failed to set up MongoMemoryServer:', error);
-    throw error;
+export async function setupTestDB() {
+  mongod = await MongoMemoryServer.create();
+
+  // const uri = mongod.getUri();
+  // await mongoose.connect(uri)
+
+  console.log(`Connected to in-memory MongoDB server at`);
+  
+  // return uri;
+}
+
+export async function teardownTestDB() {
+  await mongoose.disconnect();
+  await mongod.stop();
+
+  console.log("Disconnected from in-memory MongoDB server");
+}
+
+export async function clearDatabase() {
+  if(mongoose.connection.readyState === 0) {
+    throw new Error("Database not connected. Call setupTestDB first"); 
   }
-});
 
-afterAll(async () => {
-  try {
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.connection.close();
-      console.log("Mongoose disconnected");
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-    if (mongoServer) {
-      await mongoServer.stop();
-      console.log("MongoMemoryServer stopped");
-    }
-  } catch (error) {
-    console.error("Error during cleanup:", error);
-    throw error;
+  const collections = mongoose.connection.collections;
+
+  for (const key in collections){
+    const collection = collections[key];
+    await collection.deleteMany({});
   }
-});
+
+  console.log("All collections cleared");
+}

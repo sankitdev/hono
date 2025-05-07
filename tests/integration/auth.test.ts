@@ -1,25 +1,25 @@
-import { describe, it, expect, beforeAll, afterAll } from "bun:test";
-import "../setup";
+import { describe, it, expect, beforeAll, afterAll, afterEach } from "bun:test";
+import { setupTestDB, teardownTestDB, clearDatabase } from "../setup"
 import { createTestServer } from "../helpers/createTestServer";
 import request from "supertest";
-import mongoose from "mongoose";
 
 let server: any;
 
 beforeAll(async () => {
-  while (mongoose.connection.readyState !== 1) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
+  await setupTestDB();
   server = createTestServer();
 });
 
-afterAll(() => {
+afterEach(async ()=> {
+ await clearDatabase();
+})
+
+afterAll(async () => {
+  await teardownTestDB()
   server.stop();
 });
 
 describe("Authentication E2E Tests", () => {
-  let userId: string;
-  let verificationToken: string;
 
   it("should register a new user", async () => {
     const res = await request(`http://localhost:${server.port}`)
@@ -33,18 +33,5 @@ describe("Authentication E2E Tests", () => {
       });
 
     expect(res.status).toBe(201);
-    // expect(res.body).toHaveProperty("userId");
-
-    // userId = res.body.userId;
-    // verificationToken = res.body.verificationToken;
   });
-
-  // it("should verify the user with the token", async () => {
-  //   const res = await request(`http://localhost:${server.port}`).get(
-  //     `/api/auth/verify-link?token=${verificationToken}`
-  //   );
-
-  //   expect(res.status).toBe(200);
-  //   expect(res.body.message).toBe("User verified successfully");
-  // });
 });
