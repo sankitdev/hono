@@ -17,14 +17,17 @@ const getTransaction = asyncHandler(async (c) => {
   const userId = c.get("userId");
   const transactions = await transactionService.findAll({ userId });
   if (transactions.length === 0) return c.json([]);
-  return c.json({message: "Transactions", transactions }, HTTP_STATUS.OK);
+  return c.json({ message: "Transactions", transactions }, HTTP_STATUS.OK);
 });
 
 const createTransaction = asyncHandler(async (c) => {
   const body = await c.req.json();
   const parsed = createTransactionSchema.parse(body);
   const transaction = await transactionService.create(parsed);
-  return c.json({message:RESPONSE_MESSAGES.TRANSACTION.CREATED, transaction }, HTTP_STATUS.CREATED);
+  return c.json(
+    { message: RESPONSE_MESSAGES.TRANSACTION.CREATED, transaction },
+    HTTP_STATUS.CREATED
+  );
 });
 
 const updateTransaction = asyncHandler(async (c) => {
@@ -32,7 +35,10 @@ const updateTransaction = asyncHandler(async (c) => {
   const body = await c.req.json();
   const parsed = updateTransactionSchema.parse(body);
   const updateTrans = await transactionService.update(userId, parsed);
-  return c.json({ message: RESPONSE_MESSAGES.TRANSACTION.UPDATED, updateTrans }, HTTP_STATUS.OK);
+  return c.json(
+    { message: RESPONSE_MESSAGES.TRANSACTION.UPDATED, updateTrans },
+    HTTP_STATUS.OK
+  );
 });
 
 const deleteTransaction = asyncHandler(async (c) => {

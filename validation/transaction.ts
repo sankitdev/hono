@@ -1,9 +1,11 @@
 import { Types } from "mongoose";
 import { z } from "zod";
-const objectIdShcema = z
+
+const objectIdSchema = z
   .string()
-  .refine((val) => Types.ObjectId.isValid(val))
-  .transform((val) => new Types.ObjectId(val));
+  .refine(val => Types.ObjectId.isValid(val))
+  .transform(val => new Types.ObjectId(val));
+
 const createTransactionSchema = z.object({
   amount: z
     .number()
@@ -12,10 +14,11 @@ const createTransactionSchema = z.object({
     .max(10000, "Amount can't exceed 10000 dollar")
     .multipleOf(0.01, "Amount must have at most 2 decimal places"),
   type: z.enum(["credit_card", "debit_card"]),
-  userId: objectIdShcema,
+  userId: objectIdSchema,
 });
 
 const updateTransactionSchema = createTransactionSchema.partial({
   amount: true,
 });
+
 export { createTransactionSchema, updateTransactionSchema };

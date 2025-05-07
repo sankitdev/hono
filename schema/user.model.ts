@@ -12,7 +12,7 @@ interface IUser extends Document {
     enabled: boolean;
     secret?: string;
   };
-  failedLoginAttempt: Number;
+  failedLoginAttempt: number;
   lockUntil?: Date | null;
   status: "active" | "suspended" | "banned";
   suspendedUntil?: Date | null;
@@ -72,4 +72,5 @@ const userSchema = new Schema<IUser>(
 );
 
 const UserModel: Model<IUser> = model<IUser>("User", userSchema);
+
 export { IUser, UserModel };

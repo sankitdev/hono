@@ -5,9 +5,12 @@ import {
   verifyLoginUserWithLink,
   verifyLoginUserWithOTP,
 } from "../controller/authUser";
+
 const authRoute = new Hono();
+
 authRoute.post("/login", loginUser);
 authRoute.post("/logout", logoutUser);
 authRoute.get("/verify-link", verifyLoginUserWithLink);
 authRoute.post("/email-verify/:userId", verifyLoginUserWithOTP);
+
 export default authRoute;

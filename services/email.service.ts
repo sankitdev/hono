@@ -4,7 +4,9 @@ import * as nodemailer from "nodemailer";
 import config from "../config";
 import { IUser } from "../schema/user.model";
 import generateEmailHtml from "../views/EmailTemplate";
+
 const { EMAIL_ADDRESS, EMAIL_APP_PASSWORD } = config;
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -12,6 +14,7 @@ const transporter = nodemailer.createTransport({
     pass: EMAIL_APP_PASSWORD,
   },
 });
+
 const sendEmail = async (to: string, subject: string, html: string) => {
   try {
     const response = await transporter.sendMail({
@@ -23,7 +26,7 @@ const sendEmail = async (to: string, subject: string, html: string) => {
     return { success: true, response };
   } catch (error) {
     Logger.error("Error:", error);
-    return { sucess: false, message: (error as Error).message };
+    return { success: false, message: (error as Error).message };
   }
 };
 

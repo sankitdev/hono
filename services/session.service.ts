@@ -23,7 +23,7 @@ export const createSession = async (c: Context, userId: IUser) => {
   const parser = new UAParser(userAgentString);
   const deviceInfo = {
     browser: parser.getBrowser().name || "Unknown",
-    os: parser.getOS().name || "Unkown",
+    os: parser.getOS().name || "Unknown",
     device: parser.getDevice().model || "Unknown",
   };
   const sessionId = crypto.randomUUID();
@@ -49,7 +49,8 @@ export const createSession = async (c: Context, userId: IUser) => {
 
 export const removeSession = async (c: Context) => {
   const sessionId = c.req.header("Cookie")?.split("=")[1];
-  if (!sessionId) return c.json({ message: RESPONSE_MESSAGES.SESSION.NOT_FOUND }, 401);
+  if (!sessionId)
+    return c.json({ message: RESPONSE_MESSAGES.SESSION.NOT_FOUND }, 401);
   // get IP Address, User Agent
   const ipAddress = getClientIP(c);
   const userAgent = c.req.header("User-Agent") || "Unknown";
@@ -71,5 +72,8 @@ export const removeSession = async (c: Context) => {
     "Set-Cookie",
     "sessionId=; HttpOnly; Secure; SameSite=Strict;Path=/; Max-Age=0"
   );
-  return c.json({ message: RESPONSE_MESSAGES.AUTH.LOGOUT_SUCCESS},HTTP_STATUS.OK);
+  return c.json(
+    { message: RESPONSE_MESSAGES.AUTH.LOGOUT_SUCCESS },
+    HTTP_STATUS.OK
+  );
 };

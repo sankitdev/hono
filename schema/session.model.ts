@@ -30,4 +30,5 @@ const sessionSchema = new Schema<ISession>(
 );
 
 const SessionModel = model<ISession>("Session", sessionSchema);
+
 export { ISession, SessionModel };

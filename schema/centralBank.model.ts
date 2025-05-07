@@ -16,4 +16,5 @@ const centralBankSchema = new Schema<ICentralBank>(
 );
 
 const CentralBankModel = model<ICentralBank>("CentralBank", centralBankSchema);
+
 export { CentralBankModel, ICentralBank };

@@ -4,13 +4,11 @@ import Logger from "../utils/winstonLogger";
 
 const connectDB = async () => {
   try {
-    const db = await mongoose.connect(config.DBURL);
-    if (db) {
-      Logger.info("Connected to DataBase");
-    }
+    await mongoose.connect(config.DBURL);
+    Logger.info("✅ Connected to DataBase");
   } catch (error) {
-    Logger.error("Error connecting Database", error);
-    process.exit();
+    Logger.error("❌ Error connecting Database", error);
+    process.exit(1);
   }
 };
 

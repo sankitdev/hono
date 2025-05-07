@@ -52,7 +52,8 @@ const updateUser = asyncHandler(async (c) => {
     HTTP_STATUS.OK
   );
 });
-const deleteUser = asyncHandler(async (c) => {
+
+const deleteUser = asyncHandler(async c => {
   const id = c.req.param;
   const isDeleted = await userService.delete(id);
   if (!isDeleted)

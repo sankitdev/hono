@@ -4,17 +4,21 @@ import { HTTPException } from "hono/http-exception";
 
 export const validateRequest = <T>(schema: ZodSchema<T>, body: any) => {
   const validationResult = schema.safeParse(body);
+
   if (!validationResult.success) {
     const formattedErrors = validationResult.error.errors.map((error) => ({
       field: error.path.join("."),
       message: error.message,
     }));
+
     const errorMessage = formattedErrors
       .map((err) => `${err.message}`)
       .join(", ");
+
     throw new HTTPException(HTTP_STATUS.BAD_REQUEST, {
       message: errorMessage,
     });
   }
+
   return validationResult.data;
 };

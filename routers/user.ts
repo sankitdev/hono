@@ -12,4 +12,5 @@ userRoute.get("/", getUser);
 userRoute.post("/register", registerUser);
 userRoute.patch("/:id", updateUser);
 userRoute.delete("/:id", deleteUser);
+
 export default userRoute;

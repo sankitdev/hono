@@ -5,7 +5,7 @@ interface ITransaction extends Document {
   sender: Types.ObjectId | null;
   receiver: Types.ObjectId | null;
   amount: number;
-  paymentType: "deposit" | "withdrawl" | "transfer" | "purchase";
+  paymentType: "deposit" | "withdrawal" | "transfer" | "purchase";
   paymentMethod: "upi" | "debit_card" | "bank_transfer";
   status: "pending" | "completed" | "failed";
   transactionId: string;
@@ -22,7 +22,7 @@ const transactionSchema = new Schema<ITransaction>(
     amount: { type: Number, required: true, min: 1 },
     paymentType: {
       type: String,
-      enum: ["deposit", "withdrawl", "transfer", "purchase"],
+      enum: ["deposit", "withdrawal", "transfer", "purchase"],
       required: true,
     },
     paymentMethod: {
