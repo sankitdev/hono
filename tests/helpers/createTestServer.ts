@@ -1,12 +1,13 @@
 import { serve } from "bun";
 import app from "../../app";
+import { Server } from "../../utils/types/test";
 
 export function createTestServer() {
   const server = serve({
     fetch: app.fetch,
     port: 0,
-  });
-  const port = (server as any).port;
+  }) as Server;
+  const port = server.port;
 
   return {
     port,

@@ -2,8 +2,9 @@ import { describe, it, expect, beforeAll, afterAll, afterEach } from "bun:test";
 import { setupTestDB, teardownTestDB, clearDatabase } from "../setup";
 import { createTestServer } from "../helpers/createTestServer";
 import request from "supertest";
+import { Server } from "../../utils/types/test";
 
-let server: any;
+let server: Server;
 
 beforeAll(async () => {
   await setupTestDB();
