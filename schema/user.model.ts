@@ -62,7 +62,7 @@ const userSchema = new Schema<IUser>(
     verificationExpires: {
       type: Date,
       select: false,
-      index: { expires: "1m" },
+      index: { expires: "15m" },
     },
 
     // 🗑️ Soft Deletion
