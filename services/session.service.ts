@@ -50,7 +50,10 @@ export const createSession = async (c: Context, userId: IUser) => {
 export const removeSession = async (c: Context) => {
   const sessionId = c.req.header("Cookie")?.split("=")[1];
   if (!sessionId)
-    return c.json({ message: RESPONSE_MESSAGES.SESSION.NOT_FOUND }, 401);
+    return c.json(
+      { message: RESPONSE_MESSAGES.SESSION.NOT_FOUND },
+      HTTP_STATUS.UNAUTHORIZED
+    );
   // get IP Address, User Agent
   const ipAddress = getClientIP(c);
   const userAgent = c.req.header("User-Agent") || "Unknown";

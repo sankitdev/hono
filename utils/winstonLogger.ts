@@ -1,4 +1,5 @@
 import * as winston from "winston";
+import { Logform } from "winston";
 
 const levels = {
   error: 0,
@@ -22,7 +23,8 @@ const format = winston.format.combine(
   winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
   winston.format.colorize({ all: true }),
   winston.format.printf(
-    (info: any) => `${info.timestamp} ${info.level}: ${info.message}`
+    (info: Logform.TransformableInfo) =>
+      `${info.timestamp} ${info.level}: ${info.message}`
   )
 );
 
